@@ -51,6 +51,7 @@ class Game :
         round = Round(len(self.rounds)+1,len(self.joueurs))
         self.rounds.append(round)
         round.defPrompt(self.prompts[len(self.rounds)-1])
+        print("question : "+round.prompt)
         
         doorv2=True
         while len(round.subRounds) < 5 and doorv2: # 5 subrounds (illimité en mode strict)
@@ -60,7 +61,7 @@ class Game :
             if round.plateau != []:
                 doorv2 = False
         
-        print("Round fini")
+        print("Round n°"+round.num +" fini")
         
         
 
