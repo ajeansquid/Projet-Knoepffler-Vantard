@@ -2,6 +2,7 @@ class User :
     def __init__(self, name, id):
         self.name = name
         self.id = id
+    
     def jouer (self,num_carte,actual_round):
         actual_round.jouerCartes(self.id,num_carte)
 
@@ -22,7 +23,7 @@ class Round :
         self.plateau.append([id,numCarte])
         if len(self.plateau) == self.nb_joueur:
             self.finirRound()
-            
+
     def finirRound(self):
         cache = self.plateau[0[1]]
         door = True
@@ -30,8 +31,8 @@ class Round :
             if elements[1]!= cache:
                 door = False
         if door == False:
-            self.nb_subRound += 1
             self.subRounds.append(self)
+            self.nb_subRound += 1
             self.plateau = []
         
             
@@ -39,13 +40,24 @@ class Round :
     
 
 class Game :
-    def __init__(self, id, path):
+    def __init__(self, id, path, prompts):
         self.id = id
         self.path = path
         self.joueurs = []
         self.rounds = []
-        self.prompt = []
-    
+        self.prompts = prompts
+        
+    def start_round(self):
+        round = Round(len(self.rounds)+1,len(self.joueurs))
+        self.rounds.append(round)
+        round.prompt(self.prompt)
+        
+        while len(round.subRounds) < 5 or round.plateau != []: # 5 subrounds (illimité en mode strict)
+            for i in range(len(self.joueurs)):
+                self.joueurs[i].jouer(i,round)
+        
+        
+        
 
     
         
