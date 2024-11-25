@@ -13,7 +13,6 @@ class Round:
     def jouerCartes(self, id, numCarte):
         self.plateau.append([id,numCarte])
         if len(self.plateau) == self.nb_joueur:
-            print("Round fini")
             self.finirRound()
         
     def finirRound(self):

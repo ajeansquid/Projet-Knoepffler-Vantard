@@ -20,10 +20,16 @@ class Game :
         doorv2=True
         while len(round.subRounds) < 5 and doorv2: # 5 subrounds (illimité en mode strict)
             for i in range(len(self.joueurs)):
-                x = input("carte du joueur : "+self.joueurs[i].name)
+                x = input("carte du joueur : "+self.joueurs[i].name)    # pause a manage ici
                 self.joueurs[i].jouer(x,round)
             if round.plateau != []:
                 doorv2 = False
         
-        print("Round n°"+round.num +" fini")
+        print("Round n°"+str(round.num) +" fini")
+        
+    def game_start(self):
+        x=0
+        for i in self.features:
+            x+=1
+            print("question n°",x,":", i)
         
