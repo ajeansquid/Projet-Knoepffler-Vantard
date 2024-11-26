@@ -1,1 +1,1 @@
-{"users": [{"name": "jean", "id": 1}, {"name": "patrick", "id": 2}], "rounds": [], "current_feature_index": 0, "current_round_index": 0}
+{"users": [{"name": "fze", "id": 1}, {"name": "fze", "id": 2}], "rounds": [null], "current round": 1, "features": ["b", "regre", "", "stop"], "current feature": 1}

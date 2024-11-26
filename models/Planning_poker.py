@@ -28,7 +28,7 @@ class PlanningPoker:
     def save_session(self, filename):       # game utile ?
         session_data = {
             "users": [user.__dict__ for user in self.get_users()],
-            "rounds": [round.__dict__ for round in self.get_rounds()],
+            "rounds": [round.toList() for round in self.get_rounds()],
             "current round": self.current_round_index,
             "features": [features for features in self.get_features()],
             "current feature": self.current_feature_index
@@ -69,12 +69,16 @@ class PlanningPoker:
             self.rounds.append(round)
             self.current_round_index += 1
             round.defFeature(feature)
-            for user in self.users:
-                card = input(f"Carte du joueur {user.name} : ")
-                user.jouer(card, round)
-            round.finirRound()
-            score = round.get_score()
-            if score is not None:
-                feature['score'] = score
+            
+            doorv2=True
+            while len(round.subRounds) < 5 and doorv2: # 5 subrounds (illimité en mode strict)
+                for i in range(len(self.users)):
+                    x = input("carte du joueur : "+self.users[i].name)    # pause a manage ici
+                    self.users[i].jouer(x,round)
+                if round.plateau != []:
+                    doorv2 = False
+                score = round.get_score(self.get_rule())
+                if score is not None:
+                    feature['score'] = score
             self.current_feature_index += 1
         self.save_session('session.json')
