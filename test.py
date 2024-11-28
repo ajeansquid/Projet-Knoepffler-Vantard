@@ -7,3 +7,4 @@ Gamming.add_user("test3")
 Gamming.add_user("test4")
 
 Gamming.start_round()
+Gamming.start_round()

@@ -13,7 +13,6 @@ class Round:
     def jouerCartes(self, id, numCarte):
         self.plateau.append([id,numCarte])
         if len(self.plateau) == self.nb_joueur:
-            print("Round fini")
             self.finirRound()
         
     def finirRound(self):
@@ -28,8 +27,22 @@ class Round:
             self.nb_subRound += 1
             self.plateau = []
 
-    def get_score(self):
-        if not self.plateau:
-            return None
-        return self.plateau[0][1]
+    def get_score(self, rule):      # faire les différentes rules
+        match rule:
+            case "":
+                return
+            case "":
+                return
+            case "":
+                return
+            case "":
+                return
 
+    def toList(self):
+        print(self)
+        liste = {}
+        liste["num"]= self.num
+        liste["nb_subRound"]= self.nb_subRound
+        liste["plateau"]= self.plateau
+        liste["nb_joueur"]= self.nb_joueur
+        liste["feature"]= self.feature

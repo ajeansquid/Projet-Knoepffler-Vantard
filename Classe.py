@@ -61,8 +61,9 @@ class Game :
             if round.plateau != []:
                 doorv2 = False
         
-        print("Round n°"+round.num +" fini")
+        print("Round n°"+ str(round.num) +" fini")
         
+    
         
 
     
