@@ -4,6 +4,6 @@ class User :
         self.name = name
         self.id = id
 
-    def jouer (self,num_carte,actual_round):
-        actual_round.jouerCartes(self.id,num_carte)
+    def jouer (self,num_carte,actual_round,rule):
+        actual_round.jouerCartes(self.id,num_carte,rule)
 

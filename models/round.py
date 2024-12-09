@@ -10,12 +10,12 @@ class Round:
     def defFeature(self, feature):
         self.feature = feature
     
-    def jouerCartes(self, id, numCarte):
+    def jouerCartes(self, id, numCarte,rule):
         self.plateau.append([id,numCarte])
         if len(self.plateau) == self.nb_joueur:
-            self.finirRound()
+            self.get_res(rule)
         
-    def finirRound(self):
+    def finirRoundStrict(self):
         cache = self.plateau[0]
         door = True
         for elements in self.plateau:
@@ -26,23 +26,33 @@ class Round:
             self.subRounds.append(self)
             self.nb_subRound += 1
             self.plateau = []
+    
+    def finirRoundMediane(self):
+        return None
+    
+    def finirRoundMoyenne(self):
+        return None
+    
+    def finirRoundMajorite(self):
+        return None
 
-    def get_score(self, rule):      # faire les différentes rules
+    def get_res(self, rule):      # faire les différentes rules
         match rule:
-            case "":
-                return
-            case "":
-                return
-            case "":
-                return
-            case "":
-                return
+            case "strict":
+                return self.finirRoundStrict()
+            case "mediane":
+                return self.finirRoundMediane()
+            case "moyenne":
+                return self.finirRoundMoyenne()
+            case "majorite":
+                return self.finirRoundMajorite()
 
-    def toList(self):
-        print(self)
-        liste = {}
-        liste["num"]= self.num
-        liste["nb_subRound"]= self.nb_subRound
-        liste["plateau"]= self.plateau
-        liste["nb_joueur"]= self.nb_joueur
-        liste["feature"]= self.feature
+    def __str__(self) -> str:
+        output = "Round n°" + str(self.num) + " : " + self.feature + "\n"
+        for i in self.subRounds:
+            if isinstance(i, Round):
+                output += f"SubRound n°{i.num} : {i.feature}\n"
+            else:
+                output += str(i)
+        return output
+        
