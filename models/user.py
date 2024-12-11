@@ -1,3 +1,4 @@
+# @author tvantard & Knoepffler
 
 class User : 
     def __init__(self, name, id):
