@@ -1,3 +1,11 @@
+# @author tvantard & Knoepffler
+
+import math 
+from statistics import median, mean
+from collections import Counter
+
+# Rounds nous permet de gérer plus précisément les rounds 
+
 class Round:
     def __init__(self,num,nb_joueur):
         self.num = num
@@ -6,14 +14,18 @@ class Round:
         self.plateau = [] # liste de cartes jouées
         self.nb_joueur = nb_joueur
         self.feature= ""
-        
+        self.resultat= 0
+            
     def defFeature(self, feature):
         self.feature = feature
     
     def jouerCartes(self, id, numCarte,rule):
         self.plateau.append([id,numCarte])
         if len(self.plateau) == self.nb_joueur:
-            self.get_res(rule)
+            self.ruleSplitter(rule)
+    
+    def getResultat(self):
+        return self.resultat
         
     def finirRoundStrict(self):
         cache = self.plateau[0]
@@ -26,17 +38,30 @@ class Round:
             self.subRounds.append(self)
             self.nb_subRound += 1
             self.plateau = []
+        else :
+            self.resultat= cache[1]
+
     
     def finirRoundMediane(self):
-        return None
+        self.resultat= median(self.plateau)
     
     def finirRoundMoyenne(self):
-        return None
+        self.resultat= mean(self.plateau)
     
     def finirRoundMajorite(self):
-        return None
+        resBuff, nbsBuff= next(iter(Counter(self.plateau)))
+        self.resultat= resBuff
+        if nbsBuff>math.ceil(len(self.plateau)/2):
+            print("Nouveau rounds -> subround crée")
+            self.subRounds.append(self)
+            self.nb_subRound += 1
+            self.plateau = []
+        else :
+            self.resultat= resBuff
 
-    def get_res(self, rule):      # faire les différentes rules
+    def ruleSplitter(self, rule):      # faire les différentes rules
+        if self.nb_subRound==0:
+            return self.finirRoundStrict()
         match rule:
             case "strict":
                 return self.finirRoundStrict()

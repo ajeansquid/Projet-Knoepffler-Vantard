@@ -1,6 +1,11 @@
+# @author tvantard & Knoepffler
+
 from models.user import User
 from models.round import Round
-from utils.file_op import load_features, save_session, load_session
+from outils.file_op import load_features, save_session, load_session
+
+# Cette classe nous permet un accès rapide aux classes Rounds and Users
+# égalmement, elle permet une overview globale du jeu en cour
 
 class Game :
     def __init__(self):
@@ -37,33 +42,36 @@ class Game :
         round = Round(len(self.rounds)+1,len(self.joueurs))
         self.rounds.append(round)
         round.defFeature(self.features[len(self.rounds)-1])
-        print("question : "+round.feature)
         
         doorv2=True
-        while len(round.subRounds) < 5 and doorv2: # 5 subrounds (illimité en mode strict)
+        while len(round.subRounds) < 5 and doorv2: # 5 subrounds max
             for i in range(len(self.joueurs)):
-                x = input("carte du joueur : "+self.joueurs[i].name+ " ")    # pause a manage ici
+                x = input("carte du joueur : "+self.joueurs[i].name+ " ")
                 self.joueurs[i].jouer(x,round,self.rule)
             if round.plateau != []:
                 doorv2 = False
         
         print("Round n°"+str(round.num) +" fini")
+        return round.getResultat()
         
     def game_start(self):
         x=0
         for i in self.features:
             x+=1
-            print("question n°",x,":", i)
+            print("Tache n°",x,":", i)
+            y= self.start_round()
+            print("Niveau de difficulté : "+ str(y) +" pour la tache " + i)
     
     def load_featuresP(self, filename="session.json"):
         return load_features(filename)
         
-    def save_sessionP(self, filename="session.json"):       # game utile ?
+    def save_sessionP(self, filename="session.json"):     
         session_data = {
             "users": [user.__dict__ for user in self.get_users()],
             "rounds": [round.toList() for round in self.get_rounds()],
-            "current round": self.current_round_index,
+            "rule": self.rule,
             "features": [features for features in self.get_features()],
+            "current round": self.current_round_index,
             "current feature": self.current_feature_index
         }
         save_session(filename, session_data)

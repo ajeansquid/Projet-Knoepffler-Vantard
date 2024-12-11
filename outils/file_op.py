@@ -1,3 +1,5 @@
+# @author Knoepffler
+
 import json
 
 def load_features(filename):
