@@ -22,6 +22,9 @@ class Round:
     def jouerCartes(self, id, numCarte, rule):
         self.plateau.append([id, numCarte])
         if len(self.plateau) == self.nb_joueur:
+            if all(card[1] == "café" for card in self.plateau):
+                print("Tous les joueurs ont joué 'café'. Fin de la partie.")
+                return "café"
             if any(card[1] == "?" for card in self.plateau):
                 print("Nouveau subround -> un joueur a joué '?'")
                 self.subRounds.append(Round(self.num, self.nb_joueur))
@@ -97,6 +100,17 @@ class Round:
                 return self.finirRoundMoyenne()
             case "majorite":
                 return self.finirRoundMajorite()
+
+    def toList(self):
+        return {
+            "num": self.num,
+            "nb_subRound": self.nb_subRound,
+            "subRounds": [subRound.toList() for subRound in self.subRounds],
+            "plateau": self.plateau,
+            "nb_joueur": self.nb_joueur,
+            "feature": self.feature,
+            "resultat": self.resultat
+        }
 
     def __str__(self) -> str:
         output = "Round n°" + str(self.num) + " : " + self.feature + "\n"
