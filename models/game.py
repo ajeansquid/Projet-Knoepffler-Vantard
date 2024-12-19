@@ -39,28 +39,40 @@ class Game :
         self.current_round_index += 1
     
     def start_round(self):
-        round = Round(len(self.rounds)+1,len(self.joueurs))
+        round = Round(len(self.rounds) + 1, len(self.joueurs))
         self.rounds.append(round)
-        round.defFeature(self.features[len(self.rounds)-1])
-        
-        doorv2=True
-        while len(round.subRounds) < 5 and doorv2: # 5 subrounds max
+        round.defFeature(self.features[len(self.rounds) - 1])
+
+        doorv2 = True
+        valid_cards = ["0", "0.5", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?", "café"]
+        while len(round.subRounds) < 5 and doorv2:  # 5 subrounds max
             for i in range(len(self.joueurs)):
-                x = input("carte du joueur : "+self.joueurs[i].name+ " ")
-                self.joueurs[i].jouer(x,round,self.rule)
-            if round.plateau != []:
+                while True:
+                    x = input("carte du joueur : " + self.joueurs[i].name + " ")
+                    if x in valid_cards:
+                        if x == "café":
+                            self.save_sessionP()
+                            print("Session enregistrée et arrêtée.")
+                            return
+                        if x not in ["?", "café"]:
+                            x = float(x) if '.' in x else int(x)
+                        break
+                    else:
+                        print(f"Carte invalide: {x}. Veuillez entrer une carte valide.")
+                self.joueurs[i].jouer(x, round, self.rule)
+            if any(card[1] != "?" for card in round.plateau):
                 doorv2 = False
-        
-        print("Round n°"+str(round.num) +" fini")
+
+        print("Round n°" + str(round.num) + " fini")
         return round.getResultat()
         
     def game_start(self):
-        x=0
+        x = 0
         for i in self.features:
-            x+=1
-            print("Tache n°",x,":", i)
-            y= self.start_round()
-            print("Niveau de difficulté : "+ str(y) +" pour la tache " + i)
+            x += 1
+            print("Tache n°", x, ":", i)
+            y = self.start_round()
+            print("Niveau de difficulté : " + str(y) + " pour la tache " + i)
     
     def load_featuresP(self, filename="session.json"):
         return load_features(filename)

@@ -19,45 +19,71 @@ class Round:
     def defFeature(self, feature):
         self.feature = feature
     
-    def jouerCartes(self, id, numCarte,rule):
-        self.plateau.append([id,numCarte])
+    def jouerCartes(self, id, numCarte, rule):
+        self.plateau.append([id, numCarte])
         if len(self.plateau) == self.nb_joueur:
-            self.ruleSplitter(rule)
+            if any(card[1] == "?" for card in self.plateau):
+                print("Nouveau subround -> un joueur a joué '?'")
+                self.subRounds.append(Round(self.num, self.nb_joueur))
+                self.nb_subRound += 1
+                self.plateau = []
+            else:
+                self.ruleSplitter(rule)
     
     def getResultat(self):
+        valid_cards = [x[1] for x in self.plateau if x[1] != "?"]
+        if not valid_cards:
+            return 0
+        self.resultat = valid_cards[0]
         return self.resultat
-        
+
     def finirRoundStrict(self):
-        cache = self.plateau[0]
+        valid_cards = [card[1] for card in self.plateau if card[1] != "?"]
+        if not valid_cards:
+            self.resultat = 0
+            return
+        cache = valid_cards[0]
         door = True
-        for elements in self.plateau:
-            if elements[1]!= cache[1]:
+        for elements in valid_cards:
+            if elements != cache:
                 door = False
         if door == False:
-            print("Nouveau rounds -> subround crée")
-            self.subRounds.append(self)
+            print("Nouveau subround -> les cartes ne sont pas identiques")
+            self.subRounds.append(Round(self.num, self.nb_joueur))
             self.nb_subRound += 1
             self.plateau = []
-        else :
-            self.resultat= cache[1]
+        else:
+            self.resultat = cache
 
     
     def finirRoundMediane(self):
-        self.resultat= median(self.plateau)
+        valid_cards = [x[1] for x in self.plateau if x[1] != "?"]
+        if not valid_cards:
+            self.resultat = 0
+            return
+        self.resultat = median(valid_cards)
     
     def finirRoundMoyenne(self):
-        self.resultat= mean(self.plateau)
+        valid_cards = [x[1] for x in self.plateau if x[1] != "?"]
+        if not valid_cards:
+            self.resultat = 0
+            return
+        self.resultat = mean(valid_cards)
     
     def finirRoundMajorite(self):
-        resBuff, nbsBuff= next(iter(Counter(self.plateau)))
-        self.resultat= resBuff
-        if nbsBuff>math.ceil(len(self.plateau)/2):
-            print("Nouveau rounds -> subround crée")
-            self.subRounds.append(self)
+        valid_cards = [x[1] for x in self.plateau if x[1] != "?"]
+        if not valid_cards:
+            self.resultat = 0
+            return
+        resBuff, nbsBuff = Counter(valid_cards).most_common(1)[0]
+        self.resultat = resBuff
+        if nbsBuff > math.ceil(len(valid_cards) / 2):
+            print("Nouveau subround -> pas de majorité")
+            self.subRounds.append(Round(self.num, self.nb_joueur))
             self.nb_subRound += 1
             self.plateau = []
-        else :
-            self.resultat= resBuff
+        else:
+            self.resultat = resBuff
 
     def ruleSplitter(self, rule):      # faire les différentes rules
         if self.nb_subRound==0:
@@ -80,4 +106,3 @@ class Round:
             else:
                 output += str(i)
         return output
-        
