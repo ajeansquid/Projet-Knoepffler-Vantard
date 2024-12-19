@@ -3,6 +3,7 @@
 from models.user import User
 from models.round import Round
 from outils.file_op import load_features, save_session, load_session
+import json
 
 # Cette classe nous permet un accès rapide aux classes Rounds and Users
 # égalmement, elle permet une overview globale du jeu en cour
