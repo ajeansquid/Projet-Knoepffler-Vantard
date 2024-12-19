@@ -14,3 +14,4 @@ class User :
             actual_round.jouerCartes(self.id, num_carte, rule)
         else:
             print(f"Carte invalide: {num_carte}")
+            return True

@@ -66,7 +66,9 @@ class Game :
                     self.save_sessionP()
                     print(f"Session enregistrée et arrêtée. Fichier de session créé: {filename}")
                     break
-                self.joueurs[i].jouer(x,round,self.rule)
+                test= self.joueurs[i].jouer(x,round,self.rule)
+                if test:
+                    i-=1
             if round.plateau != []:
                 doorv2 = False
         
