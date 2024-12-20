@@ -30,7 +30,9 @@ class Round:
                 return "Les conditions des règles ne sont pas remplies, nouveau vote !"
             else:
                 result = self.ruleSplitter(rule)
-                if result != True:
+                if result == True:
+                    return True
+                else:
                     return "Les conditions des règles ne sont pas remplies, nouveau vote !"
         return False
 
