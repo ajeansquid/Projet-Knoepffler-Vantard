@@ -23,64 +23,75 @@ class Round:
         self.plateau.append([id, numCarte])
         if len(self.plateau) == self.nb_joueur:
             if all(card[1] == "café" for card in self.plateau):
-                print("Tous les joueurs ont joué 'café'. Fin de la partie.")
-                return "café" # -> save 
-            if any(card[1] == "?" for card in self.plateau):
-                print("Nouveau subround -> un joueur a joué '?'")
-                self.subRounds.append(Round(self.num, self.nb_joueur))
-                self.nb_subRound += 1
-                self.plateau = []
+                return "café" # -> save and stop game
+            if all(card[1] == "?" for card in self.plateau):
+                return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+            if rule == "strict" and any(card[1] == "?" for card in self.plateau):
+                return "Les conditions des règles ne sont pas remplies, nouveau vote !"
             else:
-                self.ruleSplitter(rule)
-    
+                result = self.ruleSplitter(rule)
+                if result != True:
+                    return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        return False
+
     def getResultat(self):
         return self.resultat
         
     def finirRoundStrict(self):
+        if not self.plateau:
+            return "Le plateau est vide. Impossible de terminer le round."
+
         cache = self.plateau[0]
         door = True
         for elements in self.plateau:
-            if elements[1]!= cache[1]:
+            if elements[1] == "?":
+                return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+            if elements[1] != cache[1]:
                 door = False
-        if door == False:
-            print("Nouveau rounds -> subround crée")
-            self.subRounds.append(self)
-            self.nb_subRound += 1
-            self.plateau = []
-        else :
-            self.resultat= cache[1]
+        if not door:
+            return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        else:
+            self.resultat = cache[1]
+            return True
     
     def finirRoundMediane(self):
-        res=[]
-        for i in self.plateau:
-            res.append(int(i[1]))
-        self.resultat= median(res)
+        if not self.plateau:
+            return "Le plateau est vide. Impossible de terminer le round."
+
+        res = [int(i[1]) for i in self.plateau if i[1] not in ["?", "café"]]
+        if not res:
+            return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        self.resultat = median(res)
+        return True
     
     def finirRoundMoyenne(self):
-        res=[]
-        for i in self.plateau:
-            res.append(int(i[1]))
-        self.resultat= mean(res)
+        if not self.plateau:
+            return "Le plateau est vide. Impossible de terminer le round."
+
+        res = [int(i[1]) for i in self.plateau if i[1] not in ["?", "café"]]
+        if not res:
+            return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        self.resultat = mean(res)
+        return True
     
     def finirRoundMajorite(self):
-        res=[]
-        for i in self.plateau:
-            res.append(int(i[1]))
-        
-        count= Counter(res)
-        resBuff, nbsBuff= count.most_common(1)[0]
-        
-        if nbsBuff< (len(self.plateau)/2):
-            print("Nouveau rounds -> subround crée")
-            self.subRounds.append(self)
-            self.nb_subRound += 1
-            self.plateau = []
-        else :
-            self.resultat= resBuff
+        if not self.plateau:
+            return "Le plateau est vide. Impossible de terminer le round."
 
-    def ruleSplitter(self, rule):      # faire les différentes rules
-        if self.nb_subRound==0:
-            return self.finirRoundStrict()
+        res = [int(i[1]) for i in self.plateau if i[1] not in ["?", "café"]]
+        if not res:
+            return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        
+        count = Counter(res)
+        resBuff, nbsBuff = count.most_common(1)[0]
+        
+        if nbsBuff < (len(res) / 2):
+            return "Les conditions des règles ne sont pas remplies, nouveau vote !"
+        else:
+            self.resultat = resBuff
+            return True
+
+    def ruleSplitter(self, rule):
         match rule:
             case "strict":
                 return self.finirRoundStrict()
@@ -110,4 +121,3 @@ class Round:
             else:
                 output += str(i)
         return output
-        

@@ -1,7 +1,7 @@
 import models.game as cl
-import Planning_poker as pk 
+import Planning_poker as pk
 
-#Test Unitaires
+# Test Unitaires
 
 """Gamming = cl.Game()
 Gamming.set_rule("moyenne")
@@ -35,4 +35,3 @@ Gamming3.save_sessionP()
 
 if __name__ == "__main__":
     pk.PlanningPoker()
-    

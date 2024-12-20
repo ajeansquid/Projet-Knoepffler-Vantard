@@ -30,6 +30,8 @@ class Game :
             self.features.append(i)
     
     def set_rule(self, rule):
+        if not rule:
+            rule = "strict"
         self.rule = rule
     def set_index(self, index):
         self.current_feature_index = index
@@ -60,15 +62,8 @@ class Game :
         doorv2=True
         while len(round.subRounds) < 5 and doorv2: # 5 subrounds max
             for i in range(len(self.joueurs)):
-                x = input("carte du joueur : "+self.joueurs[i].name+ " ")
-                if x == "café":
-                    filename = f"session_{self.init}_{self.current_round_index}.json"
-                    self.save_sessionP()
-                    print(f"Session enregistrée et arrêtée. Fichier de session créé: {filename}")
-                    break
-                test= self.joueurs[i].jouer(x,round,self.rule)
-                if test:
-                    i-=1
+                # Suppression de l'utilisation de input
+                pass
             if round.plateau != []:
                 doorv2 = False
         
@@ -115,7 +110,8 @@ class Game :
         except KeyError as e:
             print(f"Clé manquante dans le fichier de session: {e}")
     
-    def save_final_results(self, filename="final_results_{self.init}.json"):
+    def save_final_results(self, filename="final_results.json"):
+        """Sauvegarder les résultats finaux des fonctionnalités dans un fichier JSON."""
         results = {feature: round.getResultat() for feature, round in zip(self.features, self.rounds)}
         try:
             with open(filename, 'w') as file:
