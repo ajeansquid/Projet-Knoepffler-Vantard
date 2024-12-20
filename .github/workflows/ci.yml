@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ tvantard-interface-v1.5 ]
+    branches: [ tvantard-finish ]
   pull_request:
-    branches: [ tvantard-interface-v1.5 ]
+    branches: [ tvantard-finish ]
 
 jobs:
   test:
