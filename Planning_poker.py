@@ -193,6 +193,7 @@ class PlanningPoker:
                     self.end_round()
                 elif isinstance(result, str):
                     messagebox.showinfo("Subround", result)
+                    self.current_player_index = 0  # Réinitialiser l'index du joueur actuel
                     self.current_round_index = 0
                     self.update_plateau()
                     self.current_round.plateau = []  # Vider le plateau après le message
